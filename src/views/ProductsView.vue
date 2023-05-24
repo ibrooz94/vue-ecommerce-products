@@ -3,6 +3,9 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.js"
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router"
+import useUserStore from "../stores";
+import pinia from "../stores/setup";
+const store = useUserStore(pinia);
 
 const router = useRouter();
 const products = ref([])
@@ -19,6 +22,7 @@ const loadNotes = async () => {
 }
 
 onMounted(() => {
+    console.log(store.user)
     loadNotes();
 })
 

@@ -13,7 +13,7 @@
     <div class="mb-3">
       Or Sign in with:
     </div>
-    <v-btn color="red darken-2" dark class="text-none mr-2" @click="socialLogin('google')">
+    <v-btn color="red darken-2" dark class="text-none mr-2" @click="googleLogin()">
       <v-icon left>
         fab fa-google
       </v-icon>Google
@@ -39,6 +39,12 @@
   
 <script>
 import EPasswordResetForm from "./AuthPasswordReset.vue";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import pinia from "../stores/setup.js"
+const auth = getAuth();
+import useUserStore from '../stores/index.js'
+const store = useUserStore(pinia)
+
 export default {
   components: {
     EPasswordResetForm
@@ -66,17 +72,56 @@ export default {
     closeDialog() {
       this.reset = false;
     },
+    login() {
+      signInWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          console.log(user)
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+    },
     validate() {
       if (this.$refs.form.validate()) {
+        this.login()
       }
     },
+    googleLogin() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          
+          store.user = result.user;
+          console.log(store.user)
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+
+    }
 
   }
 };
 </script>
   
 <style scoped>
-.login{
+.login {
   background-color: blue;
   color: white !important;
   font-size: 0.80rem;

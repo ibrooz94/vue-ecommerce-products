@@ -1,16 +1,24 @@
-
-
 <template>
-  <div class="container">
-    <router-view></router-view>
-  </div>
+  <v-app id="app">
+   <TopHeader />
+   <v-content>
+     <router-view />
+   </v-content>
+ </v-app>
 </template>
 
-<style scoped>
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-}
-</style>
+
+<script>
+import TopHeader from '../src/components/topHeader.vue'
+export default {
+ name: "App",
+ components: {
+   TopHeader
+ },
+ data: () => ({
+   snackbar: false,
+   text: "",
+   timeout: 5000
+ }),
+};
+</script>

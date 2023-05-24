@@ -13,7 +13,6 @@ onMounted(() => {
 })
 
 const loadProduct = async () => {
-    // const docRef = doc(notesRef, noteId)
     const docRef = doc(collection(db, "products"), productId)
     const docSnap = await getDoc(docRef);
     product.value = { id: docSnap.id, ...docSnap.data() };
@@ -24,17 +23,14 @@ const loadProduct = async () => {
 <template>
     <div class="container">
         {{ product }}
-
         <v-card v-if="product" class="mx-auto" width="1500">
             <v-row>
-
                 <v-col>
                     <v-img :src="product.images[0]"></v-img>
                 </v-col>
                 <v-col>
                     <v-card :title="product.title" :subtitle="product.manufacturer" height="100%">
                         <v-spacer>
-
                             <p> {{ product.description }}</p>
                             <v-btn prepend-icon="mdi-vuetify" variant="tonal">
                                 Button
